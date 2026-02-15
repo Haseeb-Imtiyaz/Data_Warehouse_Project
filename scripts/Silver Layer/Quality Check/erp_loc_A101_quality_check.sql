@@ -1,0 +1,3 @@
+SELECT * FROM bronze.erp_LOC_A101
+
+SELECT DISTINCT cntry FROM bronze.erp_LOC_A101
