@@ -1,3 +1,57 @@
+/*
+===============================================================================
+Procedure Name : silver.load_silver
+Layer          : Silver Layer (Data Warehouse)
+Purpose        : This stored procedure loads, cleans, transforms, and standardizes
+                 data from the Bronze layer into the Silver layer.
+
+Description    :
+This procedure performs ETL operations for CRM and ERP data. It ensures data
+quality, removes duplicates, applies business rules, and prepares structured
+data for downstream consumption (Gold layer, reporting, analytics).
+
+Key Operations :
+1. Truncates existing Silver tables before loading fresh data.
+
+2. Loads CRM Tables:
+   - crm_cust_info
+     • Removes duplicates using ROW_NUMBER()
+     • Standardizes gender and marital status values
+     • Trims unwanted spaces
+
+   - crm_prd_info
+     • Extracts product category and key
+     • Standardizes product line values
+     • Calculates product end date using LEAD()
+
+   - crm_sales_details
+     • Cleans invalid dates
+     • Corrects sales and price calculations
+     • Handles NULL and invalid values
+
+3. Loads ERP Tables:
+   - erp_CUST_AZ12
+     • Cleans customer IDs
+     • Validates birthdates
+     • Standardizes gender values
+
+   - erp_LOC_A101
+     • Cleans customer IDs
+     • Standardizes country names
+
+   - erp_PX_CAT_G1V2
+     • Loads product category data without transformation
+
+4. Logging and Monitoring:
+   • Tracks execution time for each table load
+   • Tracks total batch execution time
+   • Implements TRY-CATCH for error handling
+
+Outcome:
+Clean, deduplicated, and standardized Silver layer data ready for analytics.
+===============================================================================
+*/
+
 EXEC silver.load_silver;
 CREATE OR ALTER PROCEDURE silver.load_silver AS
 BEGIN
@@ -202,4 +256,5 @@ BEGIN
 		PRINT 'ERROR NUMBER: '+ CAST(ERROR_NUMBER() AS NVARCHAR(50)) 
 	END CATCH
 END
+
 	
